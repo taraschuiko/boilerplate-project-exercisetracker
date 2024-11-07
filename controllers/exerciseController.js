@@ -35,8 +35,6 @@ const getLogs = async (req, res) => {
   if (from) dateFilter.$gte = new Date(from);
   if (to) dateFilter.$lte = new Date(to);
 
-  console.log(dateFilter);
-
   const exercises = await Exercise.find({
     userId: req.params._id,
     ...(Object.keys(dateFilter).length > 0 && { date: dateFilter }),
