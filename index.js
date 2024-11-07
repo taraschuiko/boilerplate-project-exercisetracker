@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const mongoose = require("mongoose");
-const { createUser } = require("./controllers/userController");
+const { createUser, getUsers } = require("./controllers/userController");
 const { createExercise } = require("./controllers/exerciseController");
 
 require("dotenv").config();
@@ -17,11 +17,14 @@ async function main() {
 
   app.use(cors());
   app.use(express.static("public"));
+  app.use(express.urlencoded({ extended: true }));
+
   app.get("/", (req, res) => {
     res.sendFile(__dirname + "/views/index.html");
   });
 
   app.post("/api/users", createUser);
+  app.get("/api/users", getUsers);
 
   app.post("/api/users/:_id/exercises", createExercise);
 

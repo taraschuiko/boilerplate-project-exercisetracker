@@ -1,10 +1,19 @@
 const mongoose = require("mongoose");
 
-const exerciseSchema = new Schema({
-  _id: String,
-  description: String,
-  duration: Number,
-  date: Date,
-});
+const exerciseSchema = new Schema(
+  {
+    _id: String,
+    description: String,
+    duration: Number,
+    date: Date,
+  },
+  {
+    versionKey: false,
+  }
+);
 
-export const Exercise = mongoose.model("Exercise", exerciseSchema);
+const Exercise = mongoose.model("Exercise", exerciseSchema);
+
+module.exports = {
+  Exercise,
+};
