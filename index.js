@@ -3,7 +3,7 @@ const app = express();
 const cors = require("cors");
 const mongoose = require("mongoose");
 const { createUser, getUsers } = require("./controllers/userController");
-const { createExercise } = require("./controllers/exerciseController");
+const { createExercise, getLogs } = require("./controllers/exerciseController");
 
 require("dotenv").config();
 
@@ -27,6 +27,7 @@ async function main() {
   app.get("/api/users", getUsers);
 
   app.post("/api/users/:_id/exercises", createExercise);
+  app.get("/api/users/:_id/logs", getLogs);
 
   const listener = app.listen(process.env.PORT || 3000, () => {
     console.log("Your app is listening on port " + listener.address().port);
