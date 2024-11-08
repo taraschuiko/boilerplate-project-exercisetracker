@@ -10,10 +10,7 @@ require("dotenv").config();
 main().catch((err) => console.log(err));
 
 async function main() {
-  // https://cloud.mongodb.com/v2/6728e5c7a71ab55a3a085f7e#/overview
-  await mongoose.connect(
-    `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@griddynamicslearning.4fx1k.mongodb.net/?retryWrites=true&w=majority&appName=GridDynamicsLearning`
-  );
+  await mongoose.connect(process.env.DB_URI);
 
   app.use(cors());
   app.use(express.static("public"));
