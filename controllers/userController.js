@@ -3,6 +3,18 @@ const { v4: uuidv4 } = require("uuid");
 
 const createUser = async (req, res) => {
   try {
+    if (!req.body.username) {
+      return res.status(400).json({ error: "Username is required" });
+    }
+
+    const usersWithSameUsername = await User.find({
+      username: req.body.username,
+    });
+
+    if (usersWithSameUsername.length > 0) {
+      return res.status(400).json({ error: "Username already taken" });
+    }
+
     const newUser = new User({
       _id: uuidv4(),
       username: req.body.username,
