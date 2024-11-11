@@ -2,8 +2,6 @@ const { Exercise } = require("../models/Exercise");
 const { User } = require("../models/User");
 const { v4: uuidv4 } = require("uuid");
 
-const DATE_REGEX = /^\d{4}-\d{2}-\d{2}$/;
-
 const createExercise = async (req, res) => {
   try {
     const user = await User.findById(req.params._id);
@@ -24,7 +22,7 @@ const createExercise = async (req, res) => {
       return res.status(400).json({ error: "Invalid duration value, expecting positive number." });
     }
 
-    if (req.body.date && !DATE_REGEX.test(req.body.date)) {
+    if (new Date(req.body.date).toString() === "Invalid Date") {
       return res.status(400).json({ error: "Invalid date" });
     }
 
@@ -62,17 +60,19 @@ const getLogs = async (req, res) => {
     const dateFilter = {};
 
     if (from) {
-      if (!DATE_REGEX.test(from)) {
+      const date = new Date(from);
+      if (date.toString() === "Invalid Date") {
         return res.status(400).json({ error: "Invalid from date" });
       }
-      dateFilter.$gte = new Date(from);
+      dateFilter.$gte = date;
     }
 
     if (to) {
-      if (!DATE_REGEX.test(to)) {
+      const date = new Date(to);
+      if (date.toString() === "Invalid Date") {
         return res.status(400).json({ error: "Invalid to date" });
       }
-      dateFilter.$lte = new Date(to);
+      dateFilter.$lte = date;
     }
 
     const exercises = await Exercise.find({
