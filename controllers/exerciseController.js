@@ -20,6 +20,10 @@ const createExercise = async (req, res) => {
         .json({ error: "Description and duration are required" });
     }
 
+    if (isNaN(req.body.duration) || req.body.duration <= 0) {
+      return res.status(400).json({ error: "Invalid duration value, expecting positive number." });
+    }
+
     if (req.body.date && !DATE_REGEX.test(req.body.date)) {
       return res.status(400).json({ error: "Invalid date" });
     }
