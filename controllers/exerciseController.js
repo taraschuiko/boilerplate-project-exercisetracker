@@ -19,7 +19,9 @@ const createExercise = async (req, res) => {
     }
 
     if (isNaN(req.body.duration) || req.body.duration <= 0) {
-      return res.status(400).json({ error: "Invalid duration value, expecting positive number." });
+      return res
+        .status(400)
+        .json({ error: "Invalid duration value, expecting positive number." });
     }
 
     if (new Date(req.body.date).toString() === "Invalid Date") {
@@ -75,16 +77,24 @@ const getLogs = async (req, res) => {
       dateFilter.$lte = date;
     }
 
-    const exercises = await Exercise.find({
+    if (limit && (isNaN(limit) || limit <= 0)) {
+      return res.status(400).json({ error: "Invalid limit value" });
+    }
+
+    let exercises = await Exercise.find({
       userId: req.params._id,
       ...(Object.keys(dateFilter).length > 0 && { date: dateFilter }),
-    })
-      .limit(parseInt(limit) || 0)
-      .exec();
+    }).sort({ date: 1 }).exec();
+
+    const count = exercises.length;
+
+    if (limit) {
+      exercises = exercises.slice(0, parseInt(limit || 0));
+    }
 
     res.json({
       username: user.username,
-      count: exercises.length,
+      count: count,
       log: exercises.map((exercise) => ({
         description: exercise.description,
         duration: exercise.duration,
